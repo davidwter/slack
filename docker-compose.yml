@@ -1,7 +1,7 @@
 version: '3.8'
 services:
-  app:
-    container_name: user_service
+  user_service:
+    container_name: user_service_container
     build: ./user-service
     ports:
       - "3000:3000"
@@ -11,6 +11,18 @@ services:
       - mongo
     volumes:
       - ./user-service:/app
+      - /app/node_modules
+  workspace_service:
+    container_name: workspace_service_container
+    build: ./workspace-service
+    ports:
+      - "3001:3000"
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+    volumes:
+      - ./workspace-service:/app
       - /app/node_modules
   mongo:
     container_name: mongo
