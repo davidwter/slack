@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
 const Workspace = require('./models/Workspace');
 
 dotenv.config();
@@ -13,17 +14,41 @@ const dbConnectionURI = process.env.NODE_ENV === 'test'
 
 mongoose.connect(dbConnectionURI);
 
-app.post('/workspaces', async (req, res) => {
+const authentificate = (req, res, next) => {
+  const authHeader= req.headers['authorization'];
+  if (!authHeader || !authHeader.startsWith('Bearer ')){ 
+    return res.status(401).send({ error: 'Not authenticated!' });
+  }
+  const token = authHeader.split(' ')[1];
   try {
-    const workspace = new Workspace(req.body);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = {id : decoded.id};
+    next();
+  } catch (error) {
+    res.status(403).send({ error: 'Invalid or expired token!' });
+  }
+}
+
+
+app.post('/workspaces', authentificate, async (req, res) => {
+  const {name, description} = req.body;
+  try {
+    const workspace = new Workspace(
+      {
+        name,
+        description,
+        owner: req.user.id,
+        members: [req.user.id]
+      }
+    );
     await workspace.save();
     res.status(201).send({ workspace });
   } catch (error) {
-    res.status(400).send(error);
+    res.status(500).send({message: 'Error creating workspace!'});
   }
 });
 
-app.get('/workspaces', async (req, res) => {
+app.get('/workspaces', authentificate, async (req, res) => {
   try {
     const workspaces = await Workspace.find({});
     if (!workspaces){
@@ -35,7 +60,7 @@ app.get('/workspaces', async (req, res) => {
   }
 });
 
-app.get('/workspaces/:id', async (req, res) => {
+app.get('/workspaces/:id', authentificate, async (req, res) => {
 
   try {
     const workspace = await Workspace.findById(req.params.id);
@@ -51,6 +76,53 @@ app.get('/workspaces/:id', async (req, res) => {
 }
 );
 
+app.put('/workspaces/:id', authentificate, async (req, res) => {
+  const {name, description} = req.body;
+  try {
+    const workspace = await Workspace.findById(req.params.id);
+    if (!workspace){
+      return res.status(401).send({ error: 'workspace not existing!' });
+    }
+    workspace.name = name;
+    workspace.description = description;
+    await workspace.save();
+    res.send({ workspace });
+  } catch (error) {
+    res.status(400).send(error);
+  }
+}
+);
+
+app.delete('/workspaces/:id', authentificate, async (req, res) => {
+  try {
+    const workspace = await Workspace.findById(req.params.id);
+    if (!workspace){
+      return res.status(401).send({ error: 'workspace not existing!' });
+    }
+    await workspace.remove();
+    res.send({ workspace });
+  } catch (error) {
+    res.status(400).send(error);
+  }
+} 
+);
+
+app.post('/workspaces/:workspaceId/members', authentificate, async (req, res) => {
+  const {workspaceId} = req.params;
+  const {userIdToAdd} = req.body;
+  try {
+    const workspace = await Workspace.findById(workspaceId);
+    if (!workspace){
+      return res.status(401).send({ error: 'workspace not existing!' });
+    }
+    workspace.members.push(userIdToAdd);
+    await workspace.save();
+    res.send({ workspace });
+  } catch (error) {
+    res.status(400).send(error);
+  }
+}
+);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
