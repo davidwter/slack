@@ -123,6 +123,9 @@ app.post('/workspaces/:workspaceId/members', authentificate, async (req, res) =>
     if (!workspace){
       return res.status(401).send({ error: 'workspace not existing!' });
     }
+    if (workspace.members.includes(userIdToAdd)) {
+      return res.status(400).send({ error: 'User is already a member of this workspace!' });
+    }
     workspace.members.push(userIdToAdd);
     await workspace.save();
     res.send({ workspace });
