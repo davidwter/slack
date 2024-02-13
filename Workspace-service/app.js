@@ -77,6 +77,23 @@ app.get('/workspaces/:id', authentificate, async (req, res) => {
 }
 );
 
+app.get('/workspaces/:id/members/:member_id', authentificate, async (req, res) => {
+  try {
+    const workspace = await Workspace.findById(req.params.id);
+    if (!workspace){
+      return res.status(401).send({ error: 'workspace not existing!' });
+    }
+    if (!workspace.members.includes(req.params.member_id)){
+      return res.status(401).send({ error: 'member not existing in this workspace!' });
+    }
+    res.send({ member: req.params.member_id });
+  } catch (error) {
+    res.status(400).send(error);
+  }
+}
+);
+
+
 app.put('/workspaces/:id', authentificate, async (req, res) => {
   const {name, description} = req.body;
   try {

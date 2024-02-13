@@ -13,7 +13,6 @@ services:
       - ./user-service:/app
       - /app/node_modules
     command: npx nodemon app.js
-
   workspace_service:
     container_name: workspace_service_container
     build: ./workspace-service
@@ -25,6 +24,19 @@ services:
       - mongo
     volumes:
       - ./workspace-service:/app
+      - /app/node_modules
+    command: npx nodemon app.js
+  channel_service:
+    container_name: channel_service_container
+    build: ./channel-service
+    ports:
+      - "3002:3000"
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+    volumes:
+      - ./channel-service:/app
       - /app/node_modules
     command: npx nodemon app.js
   mongo:
