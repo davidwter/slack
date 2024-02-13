@@ -38,6 +38,18 @@ app.post('/login', async (req, res) => {
   }
 });
 
+app.get('/users/:userId', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const user = await User.findById(userId).select('-password');        ;
+        res.send({ user });
+    } catch (error) {
+        res.status(400).send(error);    
+    }
+}
+);
+
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`User service listening on port ${PORT}`);

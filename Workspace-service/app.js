@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const Workspace = require('./models/Workspace');
+const { userExists } = require('./services/userService');
 
 dotenv.config();
 const app = express();
@@ -110,6 +111,13 @@ app.delete('/workspaces/:id', authentificate, async (req, res) => {
 app.post('/workspaces/:workspaceId/members', authentificate, async (req, res) => {
   const {workspaceId} = req.params;
   const {userIdToAdd} = req.body;
+
+  if (!userIdToAdd){
+    return res.status(400).send({ error: 'userIdToAdd is required!' });
+  }
+  if (!await userExists(userIdToAdd)){
+    return res.status(400).send({ error: 'userIdToAdd not existing!' });
+  }
   try {
     const workspace = await Workspace.findById(workspaceId);
     if (!workspace){
