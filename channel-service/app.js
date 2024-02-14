@@ -85,6 +85,61 @@ app.get('/workspaces/:workspaceId/channels', authentificate, async (req, res) =>
 }
 );
 
+app.get('/channels/:channelId', authentificate, async (req, res) => {
+  const {channelId} = req.params;
+  const token = req.headers['authorization'].split(' ')[1]; // Extract the token from the header
+  try {
+    const channel = await Channel.findOne({_id: channelId});
+    if (!channel){
+        return res.status(401).send({ error: 'No channel found!' });
+    }
+    res.status(200).send({ channel });
+  } catch (error) {
+    console.error('Error getting channel', error);
+    res.status(500).send({message: 'Error getting channel!'});
+  }
+}
+);
+
+app.get('/channels/:channelId/members/:userId', authentificate, async (req, res) => {
+  const {channelId, userId} = req.params;
+  const token = req.headers['authorization'].split(' ')[1]; // Extract the token from the header
+  try {
+    const channel = await Channel.findOne({_id: channelId});
+    if (!channel){
+        return res.status(401).send({ error: 'No channel found!' });
+    }
+    const isMember = channel.members.includes(userId);
+    res.status(200).send({ isMember });
+  } catch (error) {
+    console.error('Error getting channel', error);
+    res.status(500).send({message: 'Error getting channel!'});
+  }
+}
+);
+
+app.post('/channels/:channelId/members', authentificate, async (req, res) => {
+  const {userId} = req.body;
+  const {channelId} = req.params;
+  const token = req.headers['authorization'].split(' ')[1]; // Extract the token from the header
+  try {
+    const channel = await Channel.findOne({_id: channelId});
+    if (!channel){
+        return res.status(401).send({ error: 'No channel found!' });
+    }
+    if (!channel.members.includes(userId)){
+        channel.members.push(userId);
+        await channel.save();
+    }
+    res.status(200).send({ message: 'User added to channel!' });
+  } catch (error) {
+    console.error('Error adding user to channel', error);
+    res.status(500).send({message: 'Error adding user to channel!'});
+  }
+}
+);
+
+
 
 
 const PORT = process.env.PORT || 3000;

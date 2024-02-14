@@ -39,6 +39,19 @@ services:
       - ./channel-service:/app
       - /app/node_modules
     command: npx nodemon app.js
+  message_service:
+    container_name: message_service_container
+    build: ./message-service
+    ports:
+      - "3003:3000"
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+    volumes:
+      - ./message-service:/app
+      - /app/node_modules
+    command: npx nodemon app.js
   mongo:
     container_name: mongo
     image: mongo:latest
