@@ -1,0 +1,81 @@
+{
+	"info": {
+		"_postman_id": "c0d7c296-7a29-42e8-9444-f2dd1951c775",
+		"name": "Slack Clone Message Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24642699"
+	},
+	"item": [
+		{
+			"name": "post a message to a channel",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1Y2EzMTFlZTczNWFmODY0OWY0ZDlmYiIsImlhdCI6MTcwNzc1NzAyN30.mI2dtN2_BPtCBPsIoX7l7b1SCf8xpZu5PkCTRcCyMZU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"content\":\"This is the first ever message\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3003/channels/65ccefdc9c030422c93f0172/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"channels",
+						"65ccefdc9c030422c93f0172",
+						"messages"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "list all messages from a channel",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1Y2EzMTFlZTczNWFmODY0OWY0ZDlmYiIsImlhdCI6MTcwNzc1NzAyN30.mI2dtN2_BPtCBPsIoX7l7b1SCf8xpZu5PkCTRcCyMZU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3003/channels/65cba04e9af3955fd477d397/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"channels",
+						"65cba04e9af3955fd477d397",
+						"messages"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

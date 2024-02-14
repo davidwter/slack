@@ -1,0 +1,123 @@
+{
+	"info": {
+		"_postman_id": "f2b4b6bd-6192-4a5a-bf49-799ef83645f0",
+		"name": "Slack Clone Channel Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24642699"
+	},
+	"item": [
+		{
+			"name": "Create a channel on a workspace",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1Y2EzMTFlZTczNWFmODY0OWY0ZDlmYiIsImlhdCI6MTcwNzc1NzAyN30.mI2dtN2_BPtCBPsIoX7l7b1SCf8xpZu5PkCTRcCyMZU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\":\"Channel 1\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3002/workspaces/65ca4df00ebc27652493f274/channels",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"workspaces",
+						"65ca4df00ebc27652493f274",
+						"channels"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List all channels from a workspace",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3002/workspaces/65ca4df00ebc27652493f274/channels",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"workspaces",
+						"65ca4df00ebc27652493f274",
+						"channels"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check if user is member from channel",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3002/channels/65cba04e9af3955fd477d397/members/65ca311ee735af8649f4d9fb",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"channels",
+						"65cba04e9af3955fd477d397",
+						"members",
+						"65ca311ee735af8649f4d9fb"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "check if channel exists",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1Y2EzMTFlZTczNWFmODY0OWY0ZDlmYiIsImlhdCI6MTcwNzc1NzAyN30.mI2dtN2_BPtCBPsIoX7l7b1SCf8xpZu5PkCTRcCyMZU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3002/channels/65cba04e9af3955fd477d397",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"channels",
+						"65cba04e9af3955fd477d397"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

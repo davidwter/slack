@@ -1,0 +1,139 @@
+{
+	"info": {
+		"_postman_id": "f8baf935-3d25-4ee0-9893-20eeea281fe3",
+		"name": "Slack Clone Workspace Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24642699"
+	},
+	"item": [
+		{
+			"name": "Create workspace",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\":\"my Workspace 3\",\n\"description\": \"this is a description\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/workspaces",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"workspaces"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get One workspace",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/workspaces/65ca4afe4df5046b8970b096",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"workspaces",
+						"65ca4afe4df5046b8970b096"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "list all workspaces",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/workspaces",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"workspaces"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add a member to a workspace",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1Y2EzMTFlZTczNWFmODY0OWY0ZDlmYiIsImlhdCI6MTcwNzc1NzAyN30.mI2dtN2_BPtCBPsIoX7l7b1SCf8xpZu5PkCTRcCyMZU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"userIdToAdd\":\"65ca4ff389e46f9aed635d29\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/workspaces/65ca4df00ebc27652493f274/members",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"workspaces",
+						"65ca4df00ebc27652493f274",
+						"members"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check if a member is on workspace",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/workspaces/65ca4afe4df5046b8970b096/members/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"workspaces",
+						"65ca4afe4df5046b8970b096",
+						"members",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
