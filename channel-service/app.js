@@ -64,6 +64,28 @@ app.post('/workspaces/:workspaceId/channels', authentificate, async (req, res) =
 }
 );
 
+app.get('/workspaces/:workspaceId/channels', authentificate, async (req, res) => {
+  const {workspaceId} = req.params;
+  const token = req.headers['authorization'].split(' ')[1]; // Extract the token from the header
+  try {
+    const workspaceExists = await Services.verifyWorkspaceExists(workspaceId,token);
+    if (!workspaceExists){
+        return res.status(401).send({ error: 'No workspace found!' });
+    }
+    const userIsMember = await Services.verifyUserIsMemberOfWorkspace(req.user.id, workspaceId,token);
+    if (!userIsMember){
+        return res.status(401).send({ error: 'Not a member of this workspace!' });
+    }
+    const channels = await Channel.find({workspaceId});
+    res.status(200).send({ channels });
+  } catch (error) {
+    console.error('Error getting channels', error);
+    res.status(500).send({message: 'Error getting channels!'});
+  }
+}
+);
+
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
