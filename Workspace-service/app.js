@@ -4,10 +4,14 @@ const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const Workspace = require('./models/Workspace');
 const { userExists } = require('./services/userService');
+const cors = require('cors');
 
 dotenv.config();
 const app = express();
 app.use(express.json());
+app.use(cors({
+  origin: 'http://localhost:3004' // Replace with the origin(s) you want to allow
+}));
 
 const dbConnectionURI = process.env.NODE_ENV === 'test' 
     ? process.env.MONGODB_URI_TEST 

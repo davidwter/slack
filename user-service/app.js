@@ -4,10 +4,14 @@ const dotenv = require('dotenv');
 const User = require('./models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
 
 dotenv.config();
 const app = express();
 app.use(express.json());
+app.use(cors({
+  origin: 'http://localhost:3004' // Replace with the origin(s) you want to allow
+}));
 
 const dbConnectionURI = process.env.NODE_ENV === 'test' 
     ? process.env.MONGODB_URI_TEST 
@@ -16,11 +20,25 @@ const dbConnectionURI = process.env.NODE_ENV === 'test'
 mongoose.connect(dbConnectionURI);
 
 app.post('/register', async (req, res) => {
+  const user = new User(req.body);
+  const { username, email } = req.body;
   try {
-    const user = new User(req.body);
+    // Check if the email already exists
+    const emailExists = await User.findOne({ email });
+    if (emailExists) {
+      return res.status(400).send({ error: 'Email already in use.' });
+    }
+
+    // Check if the username already exists
+    const usernameExists = await User.findOne({ username });
+    if (usernameExists) {
+      return res.status(400).send({ error: 'Username already taken.' });
+    }
+    
     await user.save();
     res.status(201).send({ user });
   } catch (error) {
+    console.log(error);
     res.status(400).send(error);
   }
 });
