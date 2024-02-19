@@ -1,34 +1,45 @@
-// src/App.js
-import React from 'react';
+import React, {useEffect} from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './components/Login';
-import { CssBaseline, Box, Container } from '@mui/material';
-import Header from './components/Header';
-import Sidebar from './components/Sidebar';
-import MainContent from './components/MainContent';
-// Import other components
+import MainPage from './components/MainPage';
 
-const storeToken = (token) => {
-  // Store the token in local storage
-  localStorage.setItem('token', token);
-}
 
 
 const App = () => {
-  const handleLogin = (user) => {
-    // Logic after successful login
-    // E.g., setting user state, redirecting, etc.
-    //console.log(user);
-    storeToken(user.token);
-  };
-
   return (
-    <Box sx={{ display: 'flex' }}>
-    <CssBaseline />
-    <Header />
-    <Sidebar />
-    <MainContent />
-  </Box>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route 
+            path="/" 
+            element={
+              <ProtectedRoute>
+                <MainPage />
+              </ProtectedRoute>
+            } 
+          />
+          {/* If you have other routes, they go here */}
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
-}
+};
+
+// Define a ProtectedRoute component for handling private routes
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  console.log('isAuthenticated', isAuthenticated);
+  if (!isAuthenticated) {
+    // Redirect them to the /login page, but save the current location they were
+    // trying to go to when they were redirected. This allows us to send them
+    // along to that page after they login, which is a nicer user experience
+    // than dropping them off on the home page.
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
 
 export default App;

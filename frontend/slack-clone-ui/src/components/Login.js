@@ -1,17 +1,28 @@
 // Login.js
-import React, { useState } from 'react';
+import React, {  useState } from 'react';
+import {useAuth} from '../context/AuthContext';
 import { TextField, Button, Container, Typography, Box } from '@mui/material';
-import { login } from '../api';
+import {login as loginApi} from '../api';
+import {useNavigate} from 'react-router-dom';
 
-const Login = ({ onLogin }) => {
+
+
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { login } = useAuth();
+  const  navigate  = useNavigate();
+  
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const result = await login({ email, password });
+    const result = await loginApi({ email, password });
     if (result) {
-      onLogin(result);
+      const token = result.data.token;
+      console.log('Token:', token);
+      login(token);
+      navigate('/');
     }
 
   };
