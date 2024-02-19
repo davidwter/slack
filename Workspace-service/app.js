@@ -3,8 +3,9 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const Workspace = require('./models/Workspace');
-const { userExists } = require('./services/userService');
+const { userExists,userDetails } = require('./services/userService');
 const cors = require('cors');
+
 
 dotenv.config();
 const app = express();
@@ -27,9 +28,14 @@ const authentificate = (req, res, next) => {
   const token = authHeader.split(' ')[1];
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = {id : decoded.id};
+    const user =  userDetails(decoded.id);
+    if (!user){
+      return res.status(404).send({ error: 'User not found!' });
+    }
+    req.user = user;
     next();
   } catch (error) {
+    console.error('Error authenticating user:', error);
     res.status(403).send({ error: 'Invalid or expired token!' });
   }
 }
@@ -55,12 +61,16 @@ app.post('/workspaces', authentificate, async (req, res) => {
 
 app.get('/workspaces', authentificate, async (req, res) => {
   try {
-    const workspaces = await Workspace.find({});
+    var workspaces = await Workspace.find({});
     if (!workspaces){
       return res.status(401).send({ error: 'no workspace!' });
     }
+    if (!req.user.isAdmin){
+      workspaces = workspaces.filter(workspace => workspace.members.includes(req.user.id));
+    }
     res.send({ workspaces });
   } catch (error) {
+    console.log('Error fetching workspaces:', error);
     res.status(400).send(error);
   }
 });
@@ -71,6 +81,9 @@ app.get('/workspaces/:id', authentificate, async (req, res) => {
     const workspace = await Workspace.findById(req.params.id);
     if (!workspace){
       return res.status(401).send({ error: 'workspace not existing!' });
+    }
+    if (!req.user.isAdmin && !workspace.members.includes(req.user.id)){
+      return res.status(403).send({ error: 'Access denied!' });
     }
     res.send({ workspace });
   }
@@ -105,6 +118,9 @@ app.put('/workspaces/:id', authentificate, async (req, res) => {
     if (!workspace){
       return res.status(401).send({ error: 'workspace not existing!' });
     }
+    if (workspace.owner !== req.user.id){
+      return res.status(403).send({ error: 'Access denied!' });
+    }
     workspace.name = name;
     workspace.description = description;
     await workspace.save();
@@ -120,6 +136,9 @@ app.delete('/workspaces/:id', authentificate, async (req, res) => {
     const workspace = await Workspace.findById(req.params.id);
     if (!workspace){
       return res.status(401).send({ error: 'workspace not existing!' });
+    }
+    if (workspace.owner !== req.user.id){
+      return res.status(403).send({ error: 'Access denied!' });
     }
     await workspace.remove();
     res.send({ workspace });

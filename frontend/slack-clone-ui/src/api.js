@@ -2,19 +2,23 @@
 import axios from 'axios';
 
 const API_BASE_URL_USER = 'http://localhost:3000'; // Adjust according to your setup
-const API_BASE_URL_CHANNEL = 'http://channel_service:3000'; // Adjust according to your setup
-const API_BASE_URL_MESSAGE = 'http://message_service:3000'; // Adjust according to your setup
-const API_BASE_URL_WORKSPACE = 'http://workspace_service:3000'; // Adjust according to your setup
+const API_BASE_URL_CHANNEL = 'http://localhost:3002'; // Adjust according to your setup
+const API_BASE_URL_MESSAGE = 'http://localhost:3003'; // Adjust according to your setup
+const API_BASE_URL_WORKSPACE = 'http://localhost:3001'; // Adjust according to your setup
 
-const getToken = () => {localStorage.getItem('token')};
+const getToken = () => localStorage.getItem('token');
 const axiosWithToken = axios.create();
 
 axiosWithToken.interceptors.request.use(
     (config) => {
-        config.headers.Authorization = `Bearer ${getToken()}`;
+        const token = getToken();
+        if (token) {    
+            config.headers.Authorization = `Bearer ${token}`;
+        }
         return config;
     },
     (error) => {
+        console.log('Error in request interceptor:', error);
         return Promise.reject(error);
     }
     );
