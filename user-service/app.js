@@ -50,7 +50,7 @@ app.post('/login', async (req, res) => {
       return res.status(401).send({ error: 'Login failed!' });
     }
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    res.send({ user, token });
+    res.send({ token });
   } catch (error) {
     res.status(400).send(error);
   }

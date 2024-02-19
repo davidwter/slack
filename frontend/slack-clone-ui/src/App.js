@@ -1,15 +1,33 @@
 // src/App.js
 import React from 'react';
-import Register from './components/Register';
+import Login from './components/Login';
+import { CssBaseline, Box, Container } from '@mui/material';
+import Header from './components/Header';
+import Sidebar from './components/Sidebar';
+import MainContent from './components/MainContent';
 // Import other components
 
-function App() {
+const storeToken = (token) => {
+  // Store the token in local storage
+  localStorage.setItem('token', token);
+}
+
+
+const App = () => {
+  const handleLogin = (user) => {
+    // Logic after successful login
+    // E.g., setting user state, redirecting, etc.
+    //console.log(user);
+    storeToken(user.token);
+  };
+
   return (
-    <div className="App">
-      <h1>Slack Clone</h1>
-      <Register />
-      {/* Use other components as needed */}
-    </div>
+    <Box sx={{ display: 'flex' }}>
+    <CssBaseline />
+    <Header />
+    <Sidebar />
+    <MainContent />
+  </Box>
   );
 }
 
