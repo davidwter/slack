@@ -7,7 +7,7 @@ const MessageItem = ({ message }) => {
   return (
     <Box sx={{ mb: 2 }}>
       <Typography variant="subtitle2" component="span" sx={{ fontWeight: 'bold' }}>
-        {message.userId} {/* Display the user ID in bold */}
+        {message.userName? message.userName : message.userId} {/* Display the user ID in bold */}
       </Typography>
       <Typography variant="subtitle2" component="span" sx={{ mx: 1 }}>
         {formattedDate}
