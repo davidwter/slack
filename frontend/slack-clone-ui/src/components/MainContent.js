@@ -1,7 +1,8 @@
 import React , {useState, useEffect} from 'react';
-import { Box, Typography, Toolbar } from '@mui/material';
+import { Box, Typography, Toolbar, Divider } from '@mui/material';
 import { useSelectedChannel } from '../context/SelectedChannelContext';
 import { fetchMessages } from '../api';
+import MessagesList from './MessagesList';
 
 const MainContent = () => {
 
@@ -29,20 +30,17 @@ const MainContent = () => {
 
   // Placeholder messages
   const currentChannelName = selectedChannel ? selectedChannel.name : 'No channel selected';
-  
+
   return (
     <Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}>
       <Toolbar /> {/* Offset for AppBar */}
-      <Typography paragraph>
-        Messages from {currentChannelName}:
+      <Typography variant="h6" sx={{ mb: 2 }}>
+        Messages in {currentChannelName}
       </Typography>
-      {Array.isArray(messages) && messages.map((message) => (
-        <Typography key={message._id} paragraph>
-          {`${message.userId}: ${message.content} (${message.createdAt})`}
-        </Typography>
-      ))}
+      <MessagesList messages={messages} />
     </Box>
   );
 };
+
 
 export default MainContent;
