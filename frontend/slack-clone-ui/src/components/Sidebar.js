@@ -20,15 +20,15 @@ const Sidebar = () => {
           try {
             // Fetch channels for each workspace
             const channelsResponse = await fetchChannels(workspace._id);
-            workspace.channels = channelsResponse.data; // Assuming the response directly contains the array of channels
+            workspace.channels = channelsResponse.data.channels; // Assuming the response directly contains the array of channels
           } catch (error) {
             console.error(`Failed to fetch channels for workspace ${workspace._id}:`, error);
             workspace.channels = []; // Default to an empty array if there's an error
           }
           workspacesWithChannels.push(workspace);
         }
-
-        setWorkspaces(response.data.workspaces); 
+        console.log('Workspaces with channels:', workspacesWithChannels);
+        setWorkspaces(workspacesWithChannels); 
         // Assuming the response has a data property
       } catch (error) {
         // Handle any errors here
@@ -45,14 +45,14 @@ const Sidebar = () => {
       <Toolbar /> {/* Offset for AppBar */}
       <List>
         {Array.isArray(workspaces) && workspaces.map((workspace) => (
-          <React.Fragment key={workspace.id}>
+          <React.Fragment key={workspace._id}>
             <ListItem button>
               <ListItemText primary={workspace.name} />
             </ListItem>
             {/* Assuming workspace.channels is an array of channel names */}
-            {workspace.channels && workspace.channels.map((channel, index) => (
-              <ListItem button key={index} sx={{ pl: 4 }}>
-                <ListItemText primary={channel} />
+            {Array.isArray(workspace.channels) && workspace.channels.map((channel) => (
+              <ListItem button key={channel._id} sx={{ pl: 4 }}>
+                <ListItemText primary={channel.name} />
               </ListItem>
             ))}
           </React.Fragment>

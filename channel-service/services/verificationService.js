@@ -40,8 +40,21 @@ async function verifyWorkspaceExists(workspaceId,token) {
     }
   }
 
+  async function userDetails(userId) {
+    try {
+      // Adjust the URL based on your User Service's actual endpoint for fetching user details
+      const response = await axios.get(`http://user_service:3000/users/${userId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+      // Handle specific errors (e.g., user not found, service unavailable) as needed
+      return null;
+    }
+  }
+
   module.exports = {
     verifyWorkspaceExists,
-    verifyUserIsMemberOfWorkspace
+    verifyUserIsMemberOfWorkspace,
+    userDetails
   };
   

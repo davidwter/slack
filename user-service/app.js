@@ -67,6 +67,16 @@ app.get('/users/:userId', async (req, res) => {
 }
 );
 
+app.get('/users', async (req, res) => {
+    try {
+        const users = await User.find({}).select('-password');
+        res.send({ users });
+    } catch (error) {
+        res.status(400).send(error);
+    }
+}
+);
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
