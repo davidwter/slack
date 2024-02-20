@@ -1,14 +1,16 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './components/Login';
 import MainPage from './components/MainPage';
+import { SelectedChannelProvider } from './context/SelectedChannelContext';
 
 
 
 const App = () => {
   return (
     <AuthProvider>
+      <SelectedChannelProvider>
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -23,6 +25,7 @@ const App = () => {
           {/* If you have other routes, they go here */}
         </Routes>
       </Router>
+      </SelectedChannelProvider>
     </AuthProvider>
   );
 };

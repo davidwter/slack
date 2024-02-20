@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Drawer, List, ListItem, ListItemText, Toolbar } from '@mui/material';
 import { fetchWorkspaces,fetchChannels } from '../api';
+import { useSelectedChannel } from '../context/SelectedChannelContext';
 
 const Sidebar = () => {
   // State to store workspaces
   const [workspaces, setWorkspaces] = useState([]);
+  const { setSelectedChannel } = useSelectedChannel();
+  const handleChannelClick = (channel) => {
+    setSelectedChannel(channel);
+    console.log('Selected channel:', channel);
+  };
+
 
   useEffect(() => {
     // Define an async function to fetch workspaces
@@ -40,6 +47,8 @@ const Sidebar = () => {
     getWorkspaces();
   }, []); // Empty dependency array means this effect runs once on mount
 
+
+  
   return (
     <Drawer variant="permanent" sx={{ width: 240, '& .MuiDrawer-paper': { width: 240, boxSizing: 'border-box' } }}>
       <Toolbar /> {/* Offset for AppBar */}
@@ -51,7 +60,7 @@ const Sidebar = () => {
             </ListItem>
             {/* Assuming workspace.channels is an array of channel names */}
             {Array.isArray(workspace.channels) && workspace.channels.map((channel) => (
-              <ListItem button key={channel._id} sx={{ pl: 4 }}>
+              <ListItem button key={channel._id} sx={{ pl: 4 }} onClick={() => handleChannelClick(channel)}>
                 <ListItemText primary={channel.name} />
               </ListItem>
             ))}
