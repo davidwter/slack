@@ -3,6 +3,8 @@ import { Box, Typography, Toolbar, Divider } from '@mui/material';
 import { useSelectedChannel } from '../context/SelectedChannelContext';
 import { fetchMessages } from '../api';
 import MessagesList from './MessagesList';
+import MessageInput from './MessageInput';
+import { postAMessage } from '../api';
 
 const MainContent = () => {
 
@@ -28,6 +30,17 @@ const MainContent = () => {
     fetchMessagesForChannel();
   }, [selectedChannel]);
 
+  const onSendMessage = async (message) => {
+    if (selectedChannel) {
+      try {
+        const response = await postAMessage(selectedChannel._id, message); 
+        console.log('Message sent:', response.data.message);
+      } catch (error) {
+        console.error('Failed to send message:', error);
+      }
+    }
+  };
+
   // Placeholder messages
   const currentChannelName = selectedChannel ? selectedChannel.name : 'No channel selected';
 
@@ -38,6 +51,7 @@ const MainContent = () => {
         Messages in {currentChannelName}
       </Typography>
       <MessagesList messages={messages} />
+      <MessageInput  onSendMessage={onSendMessage} />
     </Box>
   );
 };

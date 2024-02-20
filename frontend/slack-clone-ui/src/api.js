@@ -41,7 +41,7 @@ export const fetchChannels = (workspaceId) => axiosWithToken.get(`${API_BASE_URL
 export const fetchOneChannel = (channelId) => axiosWithToken.get(`${API_BASE_URL_CHANNEL}/channels/${channelId}`);
 export const checkIfMemberOfChannel = (userId, channelId) => axiosWithToken.get(`${API_BASE_URL_CHANNEL}/channels/${channelId}/members/${userId}`);
 export const addMemberToChannel = (channelId, userId) => axiosWithToken.post(`${API_BASE_URL_CHANNEL}/channels/${channelId}/members`, {userId});
-export const postAMessage = (channelId, messageData) => axiosWithToken.post(`${API_BASE_URL_MESSAGE}/channels/${channelId}/messages`, messageData);
+export const postAMessage = (channelId, content) => axiosWithToken.post(`${API_BASE_URL_MESSAGE}/channels/${channelId}/messages`, {content});
 export const fetchMessages = (channelId) => axiosWithToken.get(`${API_BASE_URL_MESSAGE}/channels/${channelId}/messages`);
 
 // Add more API functions here following the pattern above
