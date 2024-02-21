@@ -52,6 +52,19 @@ services:
       - ./message-service:/app
       - /app/node_modules
     command: npx nodemon app.js
+  socketio_service:
+    container_name: socketio_service_container
+    build: ./socketio-service
+    ports:
+      - "3004:3000"
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+    volumes:
+      - ./socketio-service:/app
+      - /app/node_modules
+    command: npx nodemon websocket-server.js
   mongo:
     container_name: mongo
     image: mongo:latest

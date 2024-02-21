@@ -4,12 +4,15 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './components/Login';
 import MainPage from './components/MainPage';
 import { SelectedChannelProvider } from './context/SelectedChannelContext';
+import { SocketIOProvider } from './context/SocketContext';
 
 
 
 const App = () => {
   return (
+   
     <AuthProvider>
+       <SocketIOProvider>
       <SelectedChannelProvider>
       <Router>
         <Routes>
@@ -26,7 +29,9 @@ const App = () => {
         </Routes>
       </Router>
       </SelectedChannelProvider>
+      </SocketIOProvider>
     </AuthProvider>
+ 
   );
 };
 

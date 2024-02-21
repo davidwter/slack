@@ -2,14 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { Drawer, List, ListItem, ListItemText, Toolbar } from '@mui/material';
 import { fetchWorkspaces,fetchChannels } from '../api';
 import { useSelectedChannel } from '../context/SelectedChannelContext';
+import { useSocket } from '../context/SocketContext';
 
 const Sidebar = () => {
   // State to store workspaces
   const [workspaces, setWorkspaces] = useState([]);
   const { setSelectedChannel } = useSelectedChannel();
+  const { joinChannel } = useSocket();
+  
   const handleChannelClick = (channel) => {
     setSelectedChannel(channel);
     console.log('Selected channel:', channel);
+    joinChannel(channel._id);
+
   };
 
 

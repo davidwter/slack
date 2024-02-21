@@ -10,7 +10,7 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: 'http://localhost:3004' // Replace with the origin(s) you want to allow
+  origin: '*' // Replace with the origin(s) you want to allow
 }));
 
 const dbConnectionURI = process.env.NODE_ENV === 'test' 

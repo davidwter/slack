@@ -7,11 +7,12 @@ const Services = require('./services/verificationService');
 const cors = require('cors');
 
 
+
 dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: 'http://localhost:3004' // Replace with the origin(s) you want to allow
+  origin: '*' // Replace with the origin(s) you want to allow
 }));
 
 const dbConnectionURI = process.env.NODE_ENV === 'test' 
@@ -32,7 +33,6 @@ const authentificate = async (req, res, next) => {
     if (!userDetails){
       return res.status(404).send({ error: 'User not found!' });
     }
-    console.log("User details : "+userDetails);
     req.user = userDetails.user;
     next();
   } catch (error) {
@@ -47,12 +47,12 @@ app.post('/channels/:channelId/messages', authentificate, async (req, res) => {
 
   try {
     const channelExists = await Services.verifyChannelExists(channelId,token);
-    console.log("Channel exists : "+channelExists);
+    
     if (!channelExists){
         return res.status(401).send({ error: 'No channel found!' });
         }
     const userIsMember = await Services.verifyUserIsMemberOfChannel(req.user._id, channelId,token);
-    console.log("User is member : "+userIsMember);
+    
     if (!userIsMember){
         return res.status(401).send({ error: 'Not a member of this channel!' });
     }
@@ -64,8 +64,9 @@ app.post('/channels/:channelId/messages', authentificate, async (req, res) => {
         userName: req.user.username
     }
     );
-    console.log("Message : "+message);
+    
     await message.save();
+    Services.broadcastMessage(channelId);
     res.status(201).send({ message });
     } catch (error) {
       console.log(error);
@@ -79,17 +80,17 @@ app.get('/channels/:channelId/messages', authentificate, async (req, res) => {
 
   try {
     const channelExists = await Services.verifyChannelExists(channelId,token);
-    console.log("Channel exists : "+channelExists);
+    
     if (!channelExists){
         return res.status(401).send({ error: 'No channel found!' });
         }
     const userIsMember = await Services.verifyUserIsMemberOfChannel(req.user._id, channelId,token);
-    console.log("User is member : "+userIsMember);
+    
     if (!userIsMember){
         return res.status(401).send({ error: 'Not a member of this channel!' });
     }
     const messages = await Message.find({"channelId":channelId})
-    console.log("Messages : "+messages);
+    
     res.send({ messages });
     } catch (error) {
       console.log(error);
